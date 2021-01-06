@@ -12,7 +12,7 @@ public class Driver {
 	public static void main(String[] args) {
 		try {
 			JDA jda = JDABuilder.createDefault("Nzk1NzYwNDQzODMzNTgxNjM4.X_ODqg.zwza7jRl1VxSfpZFTkN3sMDD_WY").build();
-	        jda.addEventListener(new Calculate());
+	        jda.addEventListener(new Simulator());
 		} catch (LoginException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
