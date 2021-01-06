@@ -66,7 +66,12 @@ public class Simulator extends ListenerAdapter {
 		}
 		else if(currUser.state == State.WISH_STATE) {
 			if(currUser.currentMessage == e.getMessageIdLong()) {
-				e.getChannel().sendMessage("wishing not implemented yet").queue();
+				currUser.setBannerValues(currUser.pityFive, 
+						currUser.pityFour, 
+						currUser.promoFive, 
+						currUser.promoFour);
+				e.getChannel().sendMessage(
+						"Wishing not implemented yet, curr 5 star pity = " + currUser.pityFive).queue();
 			}
 		}
 		
@@ -92,6 +97,11 @@ public class Simulator extends ListenerAdapter {
 			currUser.promoFour = false;
 		}
 		
+		currUser.setBannerValues(currUser.pityFive, 
+				currUser.pityFour, 
+				currUser.promoFive, 
+				currUser.promoFour);
+		
 		embedBuilder.addField("Wish one time:", 
 				"React with :one:", 
 				false);
@@ -101,10 +111,11 @@ public class Simulator extends ListenerAdapter {
 		
 		MessageEmbed message = embedBuilder.build();
 		e.getChannel().sendMessage(message).queue(m ->{
-			m.addReaction(this.CHOICE_ONE);
-			m.addReaction(this.CHOICE_TWO);
+			m.addReaction(this.CHOICE_ONE).queue();
+			m.addReaction(this.CHOICE_TWO).queue();
 			//Can only set state once message is actually sent
 			UserInfo curr = this.users.get(user);
+			curr.currentMessage = m.getIdLong();
 			curr.state = State.WISH_STATE;
 		});
 	}
@@ -129,17 +140,18 @@ public class Simulator extends ListenerAdapter {
 			currUser.promoFive = false;
 		}
 		embedBuilder.addField("If you are guaranteed a promotional 4 star item:", 
-				"React with :one:", 
+				"React with :white_check_mark:", 
 				false);
 		embedBuilder.addField("Otherwise:", 
-				"React with :two:", 
+				"React with :x:", 
 				false);
 		MessageEmbed message = embedBuilder.build();
 		e.getChannel().sendMessage(message).queue(m ->{
-			m.addReaction(this.CHOICE_YES);
-			m.addReaction(this.CHOICE_NO);
+			m.addReaction(this.CHOICE_YES).queue();
+			m.addReaction(this.CHOICE_NO).queue();
 			//Can only set state once message is actually sent
 			UserInfo curr = this.users.get(user);
+			curr.currentMessage = m.getIdLong();
 			curr.state = State.PROMO_FOUR_STATE;
 		});
 	}
@@ -153,11 +165,8 @@ public class Simulator extends ListenerAdapter {
 		if(this.users.containsKey(user)) {
 			currUser = this.users.get(user);
 		}
-		String command = e.getMessage().getContentDisplay();		
-		
-		
-
-		if(e.getMessage().getContentDisplay().equals("!start")) {
+		String command = e.getMessage().getContentDisplay();
+		if(command.equals("!start")) {
 			
 			if(this.users.containsKey(user)) {
 				e.getChannel().sendMessage(
@@ -199,76 +208,20 @@ public class Simulator extends ListenerAdapter {
 			}
 		}
 		else if(currUser != null && currUser.state == State.PITY_FIVE_STATE) {
-			//User entered valid pity value
-			if(currUser.isValidPityFive(command)) {
-				currUser.pityFive = Integer.parseInt(command);
-				//Setup next state
-				currUser.state = State.WAIT_STATE;
-				//Ask for four star pity
-				EmbedBuilder embedBuilder = new EmbedBuilder();
-				embedBuilder.setColor(Color.BLUE);
-				embedBuilder.addField("Please enter the following value:", "4 star pity (1-10)", false);
-				embedBuilder.setTitle(this.getEmbedTitle(currUser));
-				MessageEmbed message = embedBuilder.build();
-				e.getChannel().sendMessage(message).queue(m ->{
-					//Can only set state once message is actually sent
-					UserInfo curr = this.users.get(user);
-					curr.state = State.PITY_FOUR_STATE;
-				});
-			}
+			handlePityFive(e);
 		}
 		else if(currUser != null && currUser.state == State.PITY_FOUR_STATE) {
-			//User entered valid pity value
-			if(currUser.isValidPityFour(command)) {
-				currUser.pityFive = Integer.parseInt(command);
-				//Setup next state, only standard banner can immediately wish
-				if(currUser.currentBanner instanceof StandardBanner) {
-					currUser.state = State.WAIT_STATE;
-					EmbedBuilder embedBuilder = new EmbedBuilder();
-					embedBuilder.setColor(Color.BLUE);
-					embedBuilder.addField("Wish one time:", 
-							"React with :one:", 
-							false);
-					embedBuilder.addField("Wish ten times:", 
-							"React with :two:", 
-							false);
-					embedBuilder.setTitle(this.getEmbedTitle(currUser));
-					MessageEmbed message = embedBuilder.build();
-					e.getChannel().sendMessage(message).queue(m ->{
-						m.addReaction(this.CHOICE_ONE);
-						m.addReaction(this.CHOICE_TWO);
-						long messageID = m.getIdLong();
-						
-						UserInfo curr = this.users.get(user);
-						curr.currentMessage = messageID;
-						curr.state = State.WISH_STATE;
-						
-					});
-				}
-				else {
-					currUser.state = State.WAIT_STATE;
-					EmbedBuilder embedBuilder = new EmbedBuilder();
-					embedBuilder.setColor(Color.BLUE);
-					embedBuilder.addField("If you are guaranteed a promotional 5 star item:", 
-							"React with :one:", 
-							false);
-					embedBuilder.addField("Otherwise:", 
-							"React with :two:", 
-							false);
-					embedBuilder.setTitle(this.getEmbedTitle(currUser));
-					MessageEmbed message = embedBuilder.build();
-					e.getChannel().sendMessage(message).queue(m ->{
-						m.addReaction(this.CHOICE_YES);
-						m.addReaction(this.CHOICE_NO);
-						long messageID = m.getIdLong();
-						
-						UserInfo curr = this.users.get(user);
-						curr.currentMessage = messageID;
-						curr.state = State.PROMO_FIVE_STATE;
-						
-					});
-				}
+			handlePityFour(e);
+		}
+		if(command.equals("!quit")) {
+			if(this.users.containsKey(user)) {
+				this.users.remove(user);
 			}
+			user.openPrivateChannel()
+				.flatMap(channel -> channel.sendMessage("You may begin again with !start")).queue();
+		}
+		if(command.equals("!help")) {
+			
 		}
 		
 		
@@ -276,6 +229,92 @@ public class Simulator extends ListenerAdapter {
 	}
 	
 	
+	private void handlePityFour(MessageReceivedEvent e) {
+		
+		User user = e.getAuthor();
+		String command = e.getMessage().getContentDisplay();
+		UserInfo currUser = this.users.get(user);
+		
+		//User entered valid pity value
+		if(currUser.isValidPityFour(command)) {
+			currUser.pityFour = Integer.parseInt(command);
+			//Setup next state, only standard banner can immediately wish
+			if(currUser.currentBanner instanceof StandardBanner) {
+				currUser.state = State.WAIT_STATE;
+				currUser.setBannerValues(currUser.pityFive, 
+						currUser.pityFour, 
+						currUser.promoFive, 
+						currUser.promoFour);
+				EmbedBuilder embedBuilder = new EmbedBuilder();
+				embedBuilder.setColor(Color.BLUE);
+				embedBuilder.addField("Wish one time:", 
+						"React with :one:", 
+						false);
+				embedBuilder.addField("Wish ten times:", 
+						"React with :two:", 
+						false);
+				embedBuilder.setTitle(this.getEmbedTitle(currUser));
+				MessageEmbed message = embedBuilder.build();
+				e.getChannel().sendMessage(message).queue(m ->{
+					m.addReaction(this.CHOICE_ONE).queue();
+					m.addReaction(this.CHOICE_TWO).queue();
+					long messageID = m.getIdLong();
+					
+					UserInfo curr = this.users.get(user);
+					curr.currentMessage = messageID;
+					curr.state = State.WISH_STATE;
+					
+				});
+			}
+			else {
+				currUser.state = State.WAIT_STATE;
+				EmbedBuilder embedBuilder = new EmbedBuilder();
+				embedBuilder.setColor(Color.BLUE);
+				embedBuilder.addField("If you are guaranteed a promotional 5 star item:", 
+						"React with :white_check_mark:", 
+						false);
+				embedBuilder.addField("Otherwise:", 
+						"React with :x:", 
+						false);
+				embedBuilder.setTitle(this.getEmbedTitle(currUser));
+				MessageEmbed message = embedBuilder.build();
+				e.getChannel().sendMessage(message).queue(m ->{
+					m.addReaction(this.CHOICE_YES).queue();
+					m.addReaction(this.CHOICE_NO).queue();
+					long messageID = m.getIdLong();
+					
+					UserInfo curr = this.users.get(user);
+					curr.currentMessage = messageID;
+					curr.state = State.PROMO_FIVE_STATE;
+					
+				});
+			}
+		}
+	}
+
+	private void handlePityFive(MessageReceivedEvent e) {
+		User user = e.getAuthor();
+		String command = e.getMessage().getContentDisplay();
+		UserInfo currUser = this.users.get(user);
+		//User entered valid pity value
+		if(currUser.isValidPityFive(command)) {
+			currUser.pityFive = Integer.parseInt(command);
+			//Setup next state
+			currUser.state = State.WAIT_STATE;
+			//Ask for four star pity
+			EmbedBuilder embedBuilder = new EmbedBuilder();
+			embedBuilder.setColor(Color.BLUE);
+			embedBuilder.addField("Please enter the following value:", "4 star pity (1-10)", false);
+			embedBuilder.setTitle(this.getEmbedTitle(currUser));
+			MessageEmbed message = embedBuilder.build();
+			e.getChannel().sendMessage(message).queue(m ->{
+				//Can only set state once message is actually sent
+				UserInfo curr = this.users.get(user);
+				curr.state = State.PITY_FOUR_STATE;
+			});
+		}
+	}
+
 	private void handleBannerChoice(MessageReactionAddEvent e) {
 		
 

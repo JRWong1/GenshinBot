@@ -89,6 +89,19 @@ public class UserInfo {
 		this.weaponBanner.setPromoFiveStar(promoFive);
 		this.weaponBanner.setPromoFourStar(promoFour);
 	}
+	
+	public void setBannerValues(int pityFive, int pityFour, boolean promoFive, boolean promoFour) {
+		if(this.currentBanner instanceof EventBanner) {
+			this.setEventBanner(pityFive, pityFour, promoFive, promoFour);
+		}
+		else if(this.currentBanner instanceof WeaponBanner) {
+			this.setWeaponBanner(pityFive, pityFour, promoFive, promoFour);
+		}
+		else if(this.currentBanner instanceof StandardBanner) {
+			this.setStandardBanner(pityFive, pityFour);
+		}
+	}
+	
 	private void makeWeaponBanner() {
 		List<Item> threeStars = new ArrayList<Item>();
 		List<Item> fourStars = new ArrayList<Item>();
