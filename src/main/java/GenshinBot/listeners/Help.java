@@ -1,4 +1,4 @@
-package GenshinBot;
+package GenshinBot.listeners;
 
 import java.awt.Color;
 
@@ -12,6 +12,10 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class Help extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
+    	
+    	if(e.getAuthor().isBot()) {
+			return;
+		}
         
         if(e.getMessage().getContentDisplay().equals("!help")) {
         	EmbedBuilder eb = new EmbedBuilder();

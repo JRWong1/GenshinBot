@@ -1,4 +1,4 @@
-package GenshinBot;
+package GenshinBot.model;
 
 import java.util.*;
 
@@ -7,19 +7,19 @@ public abstract class Banner {
 	public static final double CHAR_BANNER_FOUR_STAR_PERCENT = 5.1;
 	public static final double WEAPON_BANNER_FOUR_STAR_PERCENT = 6;
 	
-	protected List<Item> threeStars;
-	protected List<Item> fourStars;
-	protected List<Item> fiveStars;
-	protected Item promoChar;
-	protected List<Item> promoFourStars;
-	protected Item promoWeapon1;
-	protected Item promoWeapon2;
-	protected int pityFiveStar = 0;
-	protected int pityFourStar = 0;
+	public List<Item> threeStars;
+	public List<Item> fourStars;
+	public List<Item> fiveStars;
+	public Item promoChar;
+	public List<Item> promoFourStars;
+	public Item promoWeapon1;
+	public Item promoWeapon2;
+	public int pityFiveStar = 0;
+	public int pityFourStar = 0;
 	
 	
-	protected boolean promoFiveStar;
-	protected boolean promoFourStar;
+	public boolean promoFiveStar;
+	public boolean promoFourStar;
 	
 	public Banner() {
 		

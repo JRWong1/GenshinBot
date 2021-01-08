@@ -1,4 +1,4 @@
-package GenshinBot;
+package GenshinBot.model;
 
 public class ItemTable {
     

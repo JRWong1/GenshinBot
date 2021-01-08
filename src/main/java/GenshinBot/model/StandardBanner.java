@@ -1,4 +1,4 @@
-package GenshinBot;
+package GenshinBot.model;
 
 import java.util.List;
 import java.util.Random;
