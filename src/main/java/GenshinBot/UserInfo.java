@@ -19,6 +19,7 @@ public class UserInfo {
 	//State of the bot by message id
 	public long currentMessage = -1;
 	public State state;
+	public long lastInteraction;
 	
 	
 	//States
@@ -109,73 +110,82 @@ public class UserInfo {
 		
 		List<Item> fourStarPromos = new ArrayList<Item>();
 		
-		fourStarPromos.add(new Item(false, 4, "The Stringless"));
-		fourStarPromos.add(new Item(false, 4, "Favonius Lance"));
-		fourStarPromos.add(new Item(false, 4, "Favonius Sword"));
-		fourStarPromos.add(new Item(false, 4, "Favonius Greatsword"));
-		fourStarPromos.add(new Item(false, 4, "Sacrificial Fragments"));
+		//4 star promo weapons
+		fourStarPromos.add(ItemTable.PROMO_4_WEAPON_1);
+		fourStarPromos.add(ItemTable.PROMO_4_WEAPON_2);
+		fourStarPromos.add(ItemTable.PROMO_4_WEAPON_3);
+		fourStarPromos.add(ItemTable.PROMO_4_WEAPON_4);
+		fourStarPromos.add(ItemTable.PROMO_4_WEAPON_5);
 		
+		Item promo1 = ItemTable.PROMO_5_WEAPON_1;
+		Item promo2 = ItemTable.PROMO_5_WEAPON_2;
 		
-		Item promo1 = new Item(false, 5, "Skyward Atlas");
-		Item promo2 = new Item(false, 5, "Summit Shaper");
+		//Item promo1 = new Item(false, 5, "Skyward Atlas");
+		//Item promo2 = new Item(false, 5, "Summit Shaper");
 		
 		//5 stars
-		fiveStars.add(new Item(false, 5, "Wolf's Gravestone"));
-		fiveStars.add(new Item(false, 5, "Skyward Blade"));
-		fiveStars.add(new Item(false, 5, "Skyward Harp"));
-		fiveStars.add(new Item(false, 5, "Skyward Spine"));
-		fiveStars.add(new Item(false, 5, "Skyward Pride"));
-		fiveStars.add(new Item(false, 5, "Aquila Favonia"));
-		fiveStars.add(new Item(false, 5, "Amos' Bow"));
-		fiveStars.add(new Item(false, 5, "Lost Prayer to the Sacred Winds"));
-		fiveStars.add(new Item(false, 5, "Primordial Jade Winged-Spear"));
-		
+		fiveStars.add(ItemTable.SKYWARD_ATLAS);
+		fiveStars.add(ItemTable.SUMMIT_SHAPER);
+		fiveStars.add(ItemTable.WOLFS_GRAVESTONE);
+		fiveStars.add(ItemTable.SKYWARD_BLADE);
+		fiveStars.add(ItemTable.SKYWARD_HARP);
+		fiveStars.add(ItemTable.SKYWARD_SPINE);
+		fiveStars.add(ItemTable.SKYWARD_PRIDE);
+		fiveStars.add(ItemTable.AQUILA_FAVONIA);
+		fiveStars.add(ItemTable.AMOS_BOW);
+		fiveStars.add(ItemTable.LOST_PRAYER_TO_THE_SACRED_WINDS);
+		fiveStars.add(ItemTable.PRIMORDIAL_JADE_WINGED_SPEAR);
 		
 		//4 stars
 		//4 star characters
-		fourStars.add(new Item(true, 4, "Sucrose"));
-		fourStars.add(new Item(true, 4, "Fischl"));
-		fourStars.add(new Item(true, 4, "Bennett"));
-		fourStars.add(new Item(true, 4, "Xinyan"));
-		fourStars.add(new Item(true, 4, "Diona"));
-		fourStars.add(new Item(true, 4, "Chongyun"));
-		fourStars.add(new Item(true, 4, "Noelle"));
-		fourStars.add(new Item(true, 4, "Ningguang"));
-		fourStars.add(new Item(true, 4, "Xingqui"));
-		fourStars.add(new Item(true, 4, "Beidou"));
-		fourStars.add(new Item(true, 4, "Xiangling"));
-		fourStars.add(new Item(true, 4, "Razor"));
-		fourStars.add(new Item(true, 4, "Barbara"));
+		fourStars.add(ItemTable.SUCROSE);
+		fourStars.add(ItemTable.FISCHL);
+		fourStars.add(ItemTable.BENNETT);
+		fourStars.add(ItemTable.XINYAN);
+		fourStars.add(ItemTable.DIONA);
+		fourStars.add(ItemTable.CHONGYUN);
+		fourStars.add(ItemTable.NOELLE);
+		fourStars.add(ItemTable.NINGGUANG);
+		fourStars.add(ItemTable.XINGQUI);
+		fourStars.add(ItemTable.BEIDOU);
+		fourStars.add(ItemTable.XIANGLING);
+		fourStars.add(ItemTable.RAZOR);
+		fourStars.add(ItemTable.BARBARA);
 		
 		//4 star weapons
-		fourStars.add(new Item(false, 4, "Sacrificial Bow"));
-		fourStars.add(new Item(false, 4, "Favonius Warbow"));
-		fourStars.add(new Item(false, 4, "Eye of Perception"));
-		fourStars.add(new Item(false, 4, "The Widsith"));
-		fourStars.add(new Item(false, 4, "Favonius Codex"));
-		fourStars.add(new Item(false, 4, "Dragon's Bane"));
-		fourStars.add(new Item(false, 4, "Rainslasher"));
-		fourStars.add(new Item(false, 4, "The Bell"));
-		fourStars.add(new Item(false, 4, "Lion's Roar"));
-		fourStars.add(new Item(false, 4, "Sacrificial Sword"));
-		fourStars.add(new Item(false, 4, "The Flute"));
-		fourStars.add(new Item(false, 4, "Rust"));
-		fourStars.add(new Item(false, 4, "Sacrificial Greatsword"));
+		fourStars.add(ItemTable.SACRIFICIAL_BOW);
+		fourStars.add(ItemTable.THE_STRINGLESS);
+		fourStars.add(ItemTable.FAVONIUS_WARBOW);
+		fourStars.add(ItemTable.EYE_OF_PERCEPTION);
+		fourStars.add(ItemTable.SACRIFICIAL_FRAGMENTS);
+		fourStars.add(ItemTable.THE_WIDSITH);
+		fourStars.add(ItemTable.FAVONIUS_CODEX);
+		fourStars.add(ItemTable.FAVONIUS_LANCE);
+		fourStars.add(ItemTable.DRAGONS_BANE);
+		fourStars.add(ItemTable.RAINSLASHER);
+		fourStars.add(ItemTable.SACRIFICIAL_GREATSWORD);
+		fourStars.add(ItemTable.THE_BELL);
+		fourStars.add(ItemTable.FAVONIUS_GREATSWORD);
+		fourStars.add(ItemTable.LIONS_ROAR);
+		fourStars.add(ItemTable.SACRIFICIAL_SWORD);
+		fourStars.add(ItemTable.THE_FLUTE);
+		fourStars.add(ItemTable.FAVONIUS_SWORD);
+		fourStars.add(ItemTable.RUST);
 		
 		//3 stars
-		threeStars.add(new Item(false, 3, "Slingshot"));
-		threeStars.add(new Item(false, 3, "Sharpshooter's Oath"));
-		threeStars.add(new Item(false, 3, "Raven Bow"));
-		threeStars.add(new Item(false, 3, "Emerald Orb"));
-		threeStars.add(new Item(false, 3, "Thrilling Tales of Dragon Slayers"));
-		threeStars.add(new Item(false, 3, "Magic Guide"));
-		threeStars.add(new Item(false, 3, "Black Tassel"));
-		threeStars.add(new Item(false, 3, "Debate Club"));
-		threeStars.add(new Item(false, 3, "Bloodtainted Greatsword"));
-		threeStars.add(new Item(false, 3, "Ferrous Shadow"));
-		threeStars.add(new Item(false, 3, "Skyrider Sword"));
-		threeStars.add(new Item(false, 3, "Harbinger of Dawn"));
-		threeStars.add(new Item(false, 3, "Cool Steel"));
+		threeStars.add(ItemTable.SLINGSHOT);
+		threeStars.add(ItemTable.SHARPSHOOTERS_OATH);
+		threeStars.add(ItemTable.RAVEN_BOW);
+		threeStars.add(ItemTable.EMERALD_ORB);
+		threeStars.add(ItemTable.THRILLING_TALES_OF_DRAGON_SLAYERS);
+		threeStars.add(ItemTable.MAGIC_GUIDE);
+		threeStars.add(ItemTable.BLACK_TASSEL);
+		threeStars.add(ItemTable.DEBATE_CLUB);
+		threeStars.add(ItemTable.BLOODTAINTED_GREATSWORD);
+		threeStars.add(ItemTable.FERROUS_SHADOW);
+		threeStars.add(ItemTable.SKYRIDER_SWORD);
+		threeStars.add(ItemTable.HARBINGER_OF_DAWN);
+		threeStars.add(ItemTable.COOL_STEEL);
 		
 		this.weaponBanner = new WeaponBanner(threeStars, fourStars, fiveStars);
 		this.weaponBanner.setPromoFourStars(fourStarPromos);
@@ -189,70 +199,67 @@ public class UserInfo {
 		List<Item> fourStarPromos = new ArrayList<Item>();
 		
 		//Promo 5 stars
-		Item promoChar = new Item(true, 5, "Albedo");
+		Item promoChar = ItemTable.PROMO_5_CHAR;
 		
 		//Promo 4 stars
-		fourStarPromos.add(new Item(true, 4, "Sucrose"));
-		fourStarPromos.add(new Item(true, 4, "Fischl"));
-		fourStarPromos.add(new Item(true, 4, "Bennett"));
+		fourStarPromos.add(ItemTable.PROMO_4_CHAR_1);
+		fourStarPromos.add(ItemTable.PROMO_4_CHAR_2);
+		fourStarPromos.add(ItemTable.PROMO_4_CHAR_3);
 		
 		
 		//Add 5 star characters
-		fiveStars.add(new Item(true, 5, "Mona"));
-		fiveStars.add(new Item(true, 5, "Keqing"));
-		fiveStars.add(new Item(true, 5, "Qiqi"));
-		fiveStars.add(new Item(true, 5, "Jean"));
-		fiveStars.add(new Item(true, 5, "Diluc"));
+		fiveStars.add(ItemTable.MONA);
+		fiveStars.add(ItemTable.KEQING);
+		fiveStars.add(ItemTable.QIQI);
+		fiveStars.add(ItemTable.JEAN);
+		fiveStars.add(ItemTable.DILUC);
 		
 		//Add 4 star items
 		//4 star chars
-		fourStars.add(new Item(true, 4, "Xinyan"));
-		fourStars.add(new Item(true, 4, "Diona"));
-		fourStars.add(new Item(true, 4, "Chongyun"));
-		fourStars.add(new Item(true, 4, "Noelle"));
-		fourStars.add(new Item(true, 4, "Ningguang"));
-		fourStars.add(new Item(true, 4, "Xingqui"));
-		fourStars.add(new Item(true, 4, "Beidou"));
-		fourStars.add(new Item(true, 4, "Xiangling"));
-		fourStars.add(new Item(true, 4, "Razor"));
-		fourStars.add(new Item(true, 4, "Barbara"));
-		
+		fourStars.add(ItemTable.XINYAN);
+		fourStars.add(ItemTable.DIONA);
+		fourStars.add(ItemTable.CHONGYUN);
+		fourStars.add(ItemTable.NOELLE);
+		fourStars.add(ItemTable.NINGGUANG);
+		fourStars.add(ItemTable.XINGQUI);
+		fourStars.add(ItemTable.BEIDOU);
+		fourStars.add(ItemTable.XIANGLING);
+		fourStars.add(ItemTable.RAZOR);
+		fourStars.add(ItemTable.BARBARA);
 		
 		//4 star weapons
-		fourStars.add(new Item(false, 4, "Sacrificial Bow"));
-		fourStars.add(new Item(false, 4, "The Stringless"));
-		fourStars.add(new Item(false, 4, "Favonius Warbow"));
-		fourStars.add(new Item(false, 4, "Eye of Perception"));
-		fourStars.add(new Item(false, 4, "Sacrificial Fragments"));
-		fourStars.add(new Item(false, 4, "The Widsith"));
-		fourStars.add(new Item(false, 4, "Favonius Codex"));
-		fourStars.add(new Item(false, 4, "Favonius Lance"));
-		fourStars.add(new Item(false, 4, "Dragon's Bane"));
-		fourStars.add(new Item(false, 4, "Rainslasher"));
-		fourStars.add(new Item(false, 4, "Sacrificial Greatsword"));
-		fourStars.add(new Item(false, 4, "The Bell"));
-		fourStars.add(new Item(false, 4, "Favonius Greatsword"));
-		fourStars.add(new Item(false, 4, "Lion's Roar"));
-		fourStars.add(new Item(false, 4, "Sacrificial Sword"));
-		fourStars.add(new Item(false, 4, "The Flute"));
-		fourStars.add(new Item(false, 4, "Favonius Sword"));
-		
-		
+		fourStars.add(ItemTable.SACRIFICIAL_BOW);
+		fourStars.add(ItemTable.THE_STRINGLESS);
+		fourStars.add(ItemTable.FAVONIUS_WARBOW);
+		fourStars.add(ItemTable.EYE_OF_PERCEPTION);
+		fourStars.add(ItemTable.SACRIFICIAL_FRAGMENTS);
+		fourStars.add(ItemTable.THE_WIDSITH);
+		fourStars.add(ItemTable.FAVONIUS_CODEX);
+		fourStars.add(ItemTable.FAVONIUS_LANCE);
+		fourStars.add(ItemTable.DRAGONS_BANE);
+		fourStars.add(ItemTable.RAINSLASHER);
+		fourStars.add(ItemTable.SACRIFICIAL_GREATSWORD);
+		fourStars.add(ItemTable.THE_BELL);
+		fourStars.add(ItemTable.FAVONIUS_GREATSWORD);
+		fourStars.add(ItemTable.LIONS_ROAR);
+		fourStars.add(ItemTable.SACRIFICIAL_SWORD);
+		fourStars.add(ItemTable.THE_FLUTE);
+		fourStars.add(ItemTable.FAVONIUS_SWORD);
 		
 		//Add 3 star weapons
-		threeStars.add(new Item(false, 3, "Slingshot"));
-		threeStars.add(new Item(false, 3, "Sharpshooter's Oath"));
-		threeStars.add(new Item(false, 3, "Raven Bow"));
-		threeStars.add(new Item(false, 3, "Emerald Orb"));
-		threeStars.add(new Item(false, 3, "Thrilling Tales of Dragon Slayers"));
-		threeStars.add(new Item(false, 3, "Magic Guide"));
-		threeStars.add(new Item(false, 3, "Black Tassel"));
-		threeStars.add(new Item(false, 3, "Debate Club"));
-		threeStars.add(new Item(false, 3, "Bloodtainted Greatsword"));
-		threeStars.add(new Item(false, 3, "Ferrous Shadow"));
-		threeStars.add(new Item(false, 3, "Skyrider Sword"));
-		threeStars.add(new Item(false, 3, "Harbinger of Dawn"));
-		threeStars.add(new Item(false, 3, "Cool Steel"));
+		threeStars.add(ItemTable.SLINGSHOT);
+		threeStars.add(ItemTable.SHARPSHOOTERS_OATH);
+		threeStars.add(ItemTable.RAVEN_BOW);
+		threeStars.add(ItemTable.EMERALD_ORB);
+		threeStars.add(ItemTable.THRILLING_TALES_OF_DRAGON_SLAYERS);
+		threeStars.add(ItemTable.MAGIC_GUIDE);
+		threeStars.add(ItemTable.BLACK_TASSEL);
+		threeStars.add(ItemTable.DEBATE_CLUB);
+		threeStars.add(ItemTable.BLOODTAINTED_GREATSWORD);
+		threeStars.add(ItemTable.FERROUS_SHADOW);
+		threeStars.add(ItemTable.SKYRIDER_SWORD);
+		threeStars.add(ItemTable.HARBINGER_OF_DAWN);
+		threeStars.add(ItemTable.COOL_STEEL);
 		
 		this.eventBanner = new EventBanner(threeStars, fourStars, fiveStars);
 		this.eventBanner.setPromoChar(promoChar);
@@ -267,81 +274,77 @@ public class UserInfo {
 		
 		//Five stars
 		//Add 5 star characters
-		fiveStars.add(new Item(true, 5, "Mona"));
-		fiveStars.add(new Item(true, 5, "Keqing"));
-		fiveStars.add(new Item(true, 5, "Qiqi"));
-		fiveStars.add(new Item(true, 5, "Jean"));
-		fiveStars.add(new Item(true, 5, "Diluc"));
+		fiveStars.add(ItemTable.MONA);
+		fiveStars.add(ItemTable.KEQING);
+		fiveStars.add(ItemTable.QIQI);
+		fiveStars.add(ItemTable.JEAN);
+		fiveStars.add(ItemTable.DILUC);
+		
 		//5 star weapons
-		fiveStars.add(new Item(false, 5, "Skyward Harp"));
-		fiveStars.add(new Item(false, 5, "Skyward Atlas"));
-		fiveStars.add(new Item(false, 5, "Skyward Spine"));
-		fiveStars.add(new Item(false, 5, "Skyward Pride"));
-		fiveStars.add(new Item(false, 5, "Aquila Favonia"));
-		fiveStars.add(new Item(false, 5, "Amos' Bow"));
-		fiveStars.add(new Item(false, 5, "Lost Prayer to the Sacred Winds"));
-		fiveStars.add(new Item(false, 5, "Primordial Jade Winged-Spear"));
-		fiveStars.add(new Item(false, 5, "Wolf's Gravestone"));
-		fiveStars.add(new Item(false, 5, "Skyward Blade"));
-		
-		
+		fiveStars.add(ItemTable.SKYWARD_ATLAS);
+		fiveStars.add(ItemTable.WOLFS_GRAVESTONE);
+		fiveStars.add(ItemTable.SKYWARD_BLADE);
+		fiveStars.add(ItemTable.SKYWARD_HARP);
+		fiveStars.add(ItemTable.SKYWARD_SPINE);
+		fiveStars.add(ItemTable.SKYWARD_PRIDE);
+		fiveStars.add(ItemTable.AQUILA_FAVONIA);
+		fiveStars.add(ItemTable.AMOS_BOW);
+		fiveStars.add(ItemTable.LOST_PRAYER_TO_THE_SACRED_WINDS);
+		fiveStars.add(ItemTable.PRIMORDIAL_JADE_WINGED_SPEAR);
 		
 		//4 stars
 		//4 star characters
-		fourStars.add(new Item(true, 4, "Sucrose"));
-		fourStars.add(new Item(true, 4, "Fischl"));
-		fourStars.add(new Item(true, 4, "Bennett"));
-		fourStars.add(new Item(true, 4, "Xinyan"));
-		fourStars.add(new Item(true, 4, "Diona"));
-		fourStars.add(new Item(true, 4, "Chongyun"));
-		fourStars.add(new Item(true, 4, "Noelle"));
-		fourStars.add(new Item(true, 4, "Ningguang"));
-		fourStars.add(new Item(true, 4, "Xingqui"));
-		fourStars.add(new Item(true, 4, "Beidou"));
-		fourStars.add(new Item(true, 4, "Xiangling"));
-		fourStars.add(new Item(true, 4, "Razor"));
-		fourStars.add(new Item(true, 4, "Barbara"));
-		fourStars.add(new Item(true, 4, "Amber"));
-		fourStars.add(new Item(true, 4, "Kaeya"));
-		fourStars.add(new Item(true, 4, "Lisa"));
-		
-		
+		fourStars.add(ItemTable.SUCROSE);
+		fourStars.add(ItemTable.FISCHL);
+		fourStars.add(ItemTable.BENNETT);
+		fourStars.add(ItemTable.XINYAN);
+		fourStars.add(ItemTable.DIONA);
+		fourStars.add(ItemTable.CHONGYUN);
+		fourStars.add(ItemTable.NOELLE);
+		fourStars.add(ItemTable.NINGGUANG);
+		fourStars.add(ItemTable.XINGQUI);
+		fourStars.add(ItemTable.BEIDOU);
+		fourStars.add(ItemTable.XIANGLING);
+		fourStars.add(ItemTable.RAZOR);
+		fourStars.add(ItemTable.BARBARA);
+		fourStars.add(ItemTable.AMBER);
+		fourStars.add(ItemTable.KAEYA);
+		fourStars.add(ItemTable.LISA);
 		
 		//4 star weapons
-		fourStars.add(new Item(false, 4, "Sacrificial Bow"));
-		fourStars.add(new Item(false, 4, "The Stringless"));
-		fourStars.add(new Item(false, 4, "Favonius Warbow"));
-		fourStars.add(new Item(false, 4, "Eye of Perception"));
-		fourStars.add(new Item(false, 4, "Sacrificial Fragments"));
-		fourStars.add(new Item(false, 4, "The Widsith"));
-		fourStars.add(new Item(false, 4, "Favonius Codex"));
-		fourStars.add(new Item(false, 4, "Favonius Lance"));
-		fourStars.add(new Item(false, 4, "Dragon's Bane"));
-		fourStars.add(new Item(false, 4, "Rainslasher"));
-		fourStars.add(new Item(false, 4, "Sacrificial Greatsword"));
-		fourStars.add(new Item(false, 4, "The Bell"));
-		fourStars.add(new Item(false, 4, "Favonius Greatsword"));
-		fourStars.add(new Item(false, 4, "Lion's Roar"));
-		fourStars.add(new Item(false, 4, "Sacrificial Sword"));
-		fourStars.add(new Item(false, 4, "The Flute"));
-		fourStars.add(new Item(false, 4, "Favonius Sword"));
-		fourStars.add(new Item(false, 4, "Rust"));
-		
+		fourStars.add(ItemTable.SACRIFICIAL_BOW);
+		fourStars.add(ItemTable.THE_STRINGLESS);
+		fourStars.add(ItemTable.FAVONIUS_WARBOW);
+		fourStars.add(ItemTable.EYE_OF_PERCEPTION);
+		fourStars.add(ItemTable.SACRIFICIAL_FRAGMENTS);
+		fourStars.add(ItemTable.THE_WIDSITH);
+		fourStars.add(ItemTable.FAVONIUS_CODEX);
+		fourStars.add(ItemTable.FAVONIUS_LANCE);
+		fourStars.add(ItemTable.DRAGONS_BANE);
+		fourStars.add(ItemTable.RAINSLASHER);
+		fourStars.add(ItemTable.SACRIFICIAL_GREATSWORD);
+		fourStars.add(ItemTable.THE_BELL);
+		fourStars.add(ItemTable.FAVONIUS_GREATSWORD);
+		fourStars.add(ItemTable.LIONS_ROAR);
+		fourStars.add(ItemTable.SACRIFICIAL_SWORD);
+		fourStars.add(ItemTable.THE_FLUTE);
+		fourStars.add(ItemTable.FAVONIUS_SWORD);
+		fourStars.add(ItemTable.RUST);
 		
 		//Add 3 star weapons
-		threeStars.add(new Item(false, 3, "Slingshot"));
-		threeStars.add(new Item(false, 3, "Sharpshooter's Oath"));
-		threeStars.add(new Item(false, 3, "Raven Bow"));
-		threeStars.add(new Item(false, 3, "Emerald Orb"));
-		threeStars.add(new Item(false, 3, "Thrilling Tales of Dragon Slayers"));
-		threeStars.add(new Item(false, 3, "Magic Guide"));
-		threeStars.add(new Item(false, 3, "Black Tassel"));
-		threeStars.add(new Item(false, 3, "Debate Club"));
-		threeStars.add(new Item(false, 3, "Bloodtainted Greatsword"));
-		threeStars.add(new Item(false, 3, "Ferrous Shadow"));
-		threeStars.add(new Item(false, 3, "Skyrider Sword"));
-		threeStars.add(new Item(false, 3, "Harbinger of Dawn"));
-		threeStars.add(new Item(false, 3, "Cool Steel"));
+		threeStars.add(ItemTable.SLINGSHOT);
+		threeStars.add(ItemTable.SHARPSHOOTERS_OATH);
+		threeStars.add(ItemTable.RAVEN_BOW);
+		threeStars.add(ItemTable.EMERALD_ORB);
+		threeStars.add(ItemTable.THRILLING_TALES_OF_DRAGON_SLAYERS);
+		threeStars.add(ItemTable.MAGIC_GUIDE);
+		threeStars.add(ItemTable.BLACK_TASSEL);
+		threeStars.add(ItemTable.DEBATE_CLUB);
+		threeStars.add(ItemTable.BLOODTAINTED_GREATSWORD);
+		threeStars.add(ItemTable.FERROUS_SHADOW);
+		threeStars.add(ItemTable.SKYRIDER_SWORD);
+		threeStars.add(ItemTable.HARBINGER_OF_DAWN);
+		threeStars.add(ItemTable.COOL_STEEL);
 		
 		this.standardBanner = new StandardBanner(threeStars, fourStars, fiveStars);
 		

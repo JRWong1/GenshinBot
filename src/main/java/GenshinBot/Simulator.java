@@ -3,6 +3,9 @@ package GenshinBot;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import GenshinBot.UserInfo.State;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -21,6 +24,8 @@ public class Simulator extends ListenerAdapter {
 	
 	//Map of concurrent users of bot
 	public HashMap<User, UserInfo> users;
+	//Removes a user from consideration after this many seconds
+	public static final int TIMEOUT = 60;
 
 	
 	//Emoji choices
@@ -48,6 +53,7 @@ public class Simulator extends ListenerAdapter {
 			return;
 		}
 		UserInfo currUser = this.users.get(user);
+		currUser.lastInteraction = System.currentTimeMillis();
 		if(currUser.state == State.CHOOSE_BANNER_STATE) {
 			//Must be choose banner state and must react to the corresponding message
 			if(currUser.currentMessage == e.getMessageIdLong()) {
@@ -66,25 +72,99 @@ public class Simulator extends ListenerAdapter {
 		}
 		else if(currUser.state == State.WISH_STATE) {
 			if(currUser.currentMessage == e.getMessageIdLong()) {
-				currUser.setBannerValues(currUser.pityFive, 
-						currUser.pityFour, 
-						currUser.promoFive, 
-						currUser.promoFour);
-				e.getChannel().sendMessage(
-						"Wishing not implemented yet, curr 5 star pity = " + currUser.pityFive).queue();
+				handleWish(e);
 			}
 		}
 		
 	}
 	
+	private void handleWish(MessageReactionAddEvent e) {
+		
+		
+		User user = e.getUser();
+		UserInfo currUser = this.users.get(user);
+		currUser.state = State.WAIT_STATE;
+		//Roll once
+		if(e.getReactionEmote().getAsCodepoints().equals(this.CHOICE_ONE)) {
+			Item item = currUser.currentBanner.rollOne();
+			EmbedBuilder eb = this.makeItemEmbed(item, currUser);
+			e.getChannel().sendMessage(eb.build()).queue();
+			this.sendWishEmbed(e);
+		}
+		//Roll ten
+		else if(e.getReactionEmote().getAsCodepoints().equals(this.CHOICE_TWO)) {
+			
+			List<Item> items = currUser.currentBanner.rollTen();
+			for(Item item : items) {
+				EmbedBuilder eb = this.makeItemEmbed(item, currUser);
+				e.getChannel().sendMessage(eb.build()).queue();
+			}
+			
+			this.sendWishEmbed(e);
+			
+			
+		}
+	}
+	
+	private EmbedBuilder makeItemEmbed(Item item, UserInfo currUser) {
+		int newPityFive = currUser.currentBanner.pityFiveStar;
+		int newPityFour = currUser.currentBanner.pityFourStar;
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle(this.getEmbedTitle(currUser));
+
+		Color threeStar = new Color(99, 140, 175);
+		Color fourStar = new Color(130, 111, 179);
+		Color fiveStar = new Color(172, 117, 47);
+		if(item.starCount == 3) {
+			eb.setColor(threeStar);
+		}
+		else if(item.starCount == 4) {
+			eb.setColor(fourStar);
+		}
+		else if(item.starCount == 5) {
+			eb.setColor(fiveStar);
+		}
+		
+		
+		eb.addField("New Five Star Pity", Integer.toString(newPityFive), false);
+		eb.addField("New Four Star Pity", Integer.toString(newPityFour), false);
+		if(item.isChar) {
+			eb.addField("You got a Character", item.name, false);
+		}
+		else {
+			eb.addField("You got a Weapon", item.name, false);
+		}
+		eb.setImage(item.imageLink);
+		return eb;
+	}
+	
+	private void sendWishEmbed(MessageReactionAddEvent e) {
+		User user = e.getUser();
+		UserInfo currUser = this.users.get(user);
+		EmbedBuilder wishEmbed = new EmbedBuilder();
+		wishEmbed.setColor(Color.BLUE);
+		wishEmbed.setTitle(this.getEmbedTitle(currUser));
+		wishEmbed.addField("Wish one time:", 
+				"React with :one:", 
+				false);
+		wishEmbed.addField("Wish ten times:", 
+				"React with :two:", 
+				false);
+		e.getChannel().sendMessage(wishEmbed.build()).queue(m ->{
+			m.addReaction(this.CHOICE_ONE).queue();
+			m.addReaction(this.CHOICE_TWO).queue();
+			//Can only set state once message is actually sent
+			UserInfo curr = this.users.get(user);
+			curr.currentMessage = m.getIdLong();
+			curr.state = State.WISH_STATE;
+		});
+	}
+	
 	private void handlePromoFour(MessageReactionAddEvent e) {
-		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setColor(Color.BLUE);
 		
 		User user = e.getUser();
 		UserInfo currUser = this.users.get(user);
 		
-		embedBuilder.setTitle(this.getEmbedTitle(currUser));
 		
 		currUser.state = State.WAIT_STATE;
 		
@@ -102,22 +182,8 @@ public class Simulator extends ListenerAdapter {
 				currUser.promoFive, 
 				currUser.promoFour);
 		
-		embedBuilder.addField("Wish one time:", 
-				"React with :one:", 
-				false);
-		embedBuilder.addField("Wish ten times:", 
-				"React with :two:", 
-				false);
-		
-		MessageEmbed message = embedBuilder.build();
-		e.getChannel().sendMessage(message).queue(m ->{
-			m.addReaction(this.CHOICE_ONE).queue();
-			m.addReaction(this.CHOICE_TWO).queue();
-			//Can only set state once message is actually sent
-			UserInfo curr = this.users.get(user);
-			curr.currentMessage = m.getIdLong();
-			curr.state = State.WISH_STATE;
-		});
+		this.sendWishEmbed(e);
+
 	}
 
 	private void handlePromoFive(MessageReactionAddEvent e) {
@@ -159,11 +225,15 @@ public class Simulator extends ListenerAdapter {
 	@Override
     public void onMessageReceived(MessageReceivedEvent e) {
 		
+		if(e.getAuthor().isBot()) {
+			return;
+		}
 		
 		User user = e.getAuthor();
 		UserInfo currUser = null;
 		if(this.users.containsKey(user)) {
 			currUser = this.users.get(user);
+			currUser.lastInteraction = System.currentTimeMillis();
 		}
 		String command = e.getMessage().getContentDisplay();
 		if(command.equals("!start")) {
@@ -177,6 +247,10 @@ public class Simulator extends ListenerAdapter {
 				
 				
 				users.put(user, new UserInfo());
+				
+				this.users.get(user).lastInteraction = System.currentTimeMillis();
+				this.setTimeoutUser(user, this.users.get(user));
+				
 				user.openPrivateChannel()
 					.flatMap(channel -> channel.sendMessage("Starting Genshin Simulation"))
 					.queue();
@@ -220,14 +294,35 @@ public class Simulator extends ListenerAdapter {
 			user.openPrivateChannel()
 				.flatMap(channel -> channel.sendMessage("You may begin again with !start")).queue();
 		}
-		if(command.equals("!help")) {
 			
-		}
-		
-		
 		//End of method
 	}
 	
+	private void setTimeoutUser(User user, UserInfo currUser) {
+		
+		//User already removed
+		if(!this.users.containsKey(user)) {
+			return;
+		}
+		
+		CompletableFuture.delayedExecutor(Simulator.TIMEOUT, TimeUnit.SECONDS).execute(() -> {
+			//User already removed
+			if(!this.users.containsKey(user)) {
+				return;
+			}
+			long currTime = System.currentTimeMillis();
+			if(Math.abs(currUser.lastInteraction - currTime) >= (long)Simulator.TIMEOUT * (long)1000) {
+				user.openPrivateChannel()
+					.flatMap(channel -> channel.sendMessage("You have timed out, please try again."))
+					.queue();
+				this.users.remove(user);
+				return;
+			}
+			else {
+				this.setTimeoutUser(user, currUser);
+			}
+		});
+	}
 	
 	private void handlePityFour(MessageReceivedEvent e) {
 		

@@ -13,6 +13,7 @@ public class Driver {
 		try {
 			JDA jda = JDABuilder.createDefault("Nzk1NzYwNDQzODMzNTgxNjM4.X_ODqg.zwza7jRl1VxSfpZFTkN3sMDD_WY").build();
 	        jda.addEventListener(new Simulator());
+	        jda.addEventListener(new Help());
 		} catch (LoginException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -44,10 +44,8 @@ public abstract class Banner {
 	
 	public int maxPityFive() {
 		if(this instanceof WeaponBanner) {
-			System.out.println("we got a weapon banner instance");
 			return 80;
 		}
-		System.out.println("we got a non weapon banner instance");
 		return 90;
 	}
 	public int maxPityFour() {
