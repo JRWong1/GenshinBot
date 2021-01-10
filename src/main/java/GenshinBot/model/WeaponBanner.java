@@ -21,7 +21,6 @@ public class WeaponBanner extends Banner {
 		double random = Math.random();
 		random = 100*random;
 		//Got a 5 star
-		//EVENT BANNER CASE
 		if(random <= this.calcPercentChance(this.pityFiveStar)) {
 			//75% chance of getting promo 5 star
 			if(this.promoFiveStar || Math.random() <= 0.75) {
@@ -42,8 +41,8 @@ public class WeaponBanner extends Banner {
 			this.pityFourStar = 0;
 			this.promoFiveStar = true;
 		}
-		//Got a 4 star EVENT BANNER CASE
-		else if(random <= this.WEAPON_BANNER_FOUR_STAR_PERCENT || this.pityFourStar == 10) {
+		//Got a 4 star
+		else if(random <= Banner.WEAPON_BANNER_FOUR_STAR_PERCENT || this.pityFourStar == 10) {
 			//Got promo 4 star
 			if(this.promoFourStar || Math.random() <= 0.75) {
 				this.promoFourStar = false;

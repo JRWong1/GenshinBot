@@ -19,7 +19,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.SnowflakeCacheView;
 
 public class Driver {
 	
