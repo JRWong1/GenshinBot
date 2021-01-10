@@ -34,10 +34,10 @@ public class PromoFourListener extends ListenerAdapter{
 		}
 		User user = e.getUser();
 		//Random reaction, ignore
-		if(!Driver.users.containsKey(user)) {
+		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		if(currUser.state == State.PROMO_FOUR_STATE) {
 			if(currUser.currentMessage == e.getMessageIdLong()) {
 				handlePromoFour(e);
@@ -47,7 +47,7 @@ public class PromoFourListener extends ListenerAdapter{
 
 	private void handlePromoFour(MessageReactionAddEvent e) {
 		User user = e.getUser();
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		
 		
 		currUser.state = State.WAIT_STATE;

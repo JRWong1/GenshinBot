@@ -30,14 +30,13 @@ public class QuitListener extends ListenerAdapter{
 			return;
 		}
 		User user = e.getAuthor();
-		if(!Driver.users.containsKey(user)) {
+		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
-		UserInfo currUser = Driver.users.get(user);
 		String command = e.getMessage().getContentDisplay();
 		if(command.equals("!quit")) {
-			if(Driver.users.containsKey(user)) {
-				Driver.users.remove(user);
+			if(Driver.users.containsKey(user.getIdLong())) {
+				Driver.users.remove(user.getIdLong());
 			}
 			user.openPrivateChannel()
 				.flatMap(channel -> channel.sendMessage("You may begin again with !start")).queue();

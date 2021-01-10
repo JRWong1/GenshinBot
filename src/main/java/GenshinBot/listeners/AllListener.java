@@ -33,8 +33,8 @@ public class AllListener extends ListenerAdapter{
 		}
 		User user = e.getAuthor();
 		UserInfo currUser = null;
-		if(Driver.users.containsKey(user)) {
-			currUser = Driver.users.get(user);
+		if(Driver.users.containsKey(user.getIdLong())) {
+			currUser = Driver.users.get(user.getIdLong());
 			currUser.lastInteraction = System.currentTimeMillis();
 		}
 	}
@@ -42,15 +42,17 @@ public class AllListener extends ListenerAdapter{
 	@Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
 		
+		
+		
 		if(e.getUser().isBot()) {
 			return;
 		}
 		User user = e.getUser();
 		//Random reaction, ignore
-		if(!Driver.users.containsKey(user)) {
+		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		currUser.lastInteraction = System.currentTimeMillis();
 	}
 }

@@ -31,10 +31,10 @@ public class PityFiveListener extends ListenerAdapter {
 			return;
 		}
 		User user = e.getAuthor();
-		if(!Driver.users.containsKey(user)) {
+		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		
 		if(currUser.state == State.PITY_FIVE_STATE) {
 			this.handlePityFive(e);
@@ -44,7 +44,7 @@ public class PityFiveListener extends ListenerAdapter {
 	private void handlePityFive(MessageReceivedEvent e) {
 		User user = e.getAuthor();
 		String command = e.getMessage().getContentDisplay();
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		//User entered valid pity value
 		if(currUser.isValidPityFive(command)) {
 			currUser.pityFive = Integer.parseInt(command);
@@ -54,11 +54,11 @@ public class PityFiveListener extends ListenerAdapter {
 			EmbedBuilder embedBuilder = new EmbedBuilder();
 			embedBuilder.setColor(Color.BLUE);
 			embedBuilder.addField("Please enter the following value:", "4 star pity (1-10)", false);
-			embedBuilder.setTitle(Driver.getEmbedTitle(currUser));
+			embedBuilder.setTitle(Driver.getEmbedTitle(user, currUser));
 			MessageEmbed message = embedBuilder.build();
 			e.getChannel().sendMessage(message).queue(m ->{
 				//Can only set state once message is actually sent
-				UserInfo curr = Driver.users.get(user);
+				UserInfo curr = Driver.users.get(user.getIdLong());
 				curr.state = State.PITY_FOUR_STATE;
 			});
 		}

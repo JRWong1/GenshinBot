@@ -35,7 +35,7 @@ public class StartListener extends ListenerAdapter{
 		String command = e.getMessage().getContentDisplay();
 		if(command.equals("!start")) {
 			
-			if(Driver.users.containsKey(user)) {
+			if(Driver.users.containsKey(user.getIdLong())) {
 				e.getChannel().sendMessage(
 						"You have already begun the simulation, please check your Direct Messages."
 						).queue();
@@ -43,10 +43,10 @@ public class StartListener extends ListenerAdapter{
 			else {
 				
 				
-				Driver.users.put(user, new UserInfo());
+				Driver.users.put(user.getIdLong(), new UserInfo());
 				
-				Driver.users.get(user).lastInteraction = System.currentTimeMillis();
-				Driver.setTimeoutUser(user, Driver.users.get(user));
+				Driver.users.get(user.getIdLong()).lastInteraction = System.currentTimeMillis();
+				Driver.setTimeoutUser(user, Driver.users.get(user.getIdLong()));
 				
 				user.openPrivateChannel()
 					.flatMap(channel -> channel.sendMessage("Starting Genshin Simulation"))

@@ -32,10 +32,10 @@ public class PromoFiveListener extends ListenerAdapter{
 		}
 		User user = e.getUser();
 		//Random reaction, ignore
-		if(!Driver.users.containsKey(user)) {
+		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		if(currUser.state == State.PROMO_FIVE_STATE) {
 			if(currUser.currentMessage == e.getMessageIdLong()) {
 				handlePromoFive(e);
@@ -47,9 +47,9 @@ public class PromoFiveListener extends ListenerAdapter{
 		embedBuilder.setColor(Color.BLUE);
 		
 		User user = e.getUser();
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		
-		embedBuilder.setTitle(Driver.getEmbedTitle(currUser));
+		embedBuilder.setTitle(Driver.getEmbedTitle(user, currUser));
 		
 		currUser.state = State.WAIT_STATE;
 		
@@ -72,7 +72,7 @@ public class PromoFiveListener extends ListenerAdapter{
 			m.addReaction(Driver.CHOICE_YES).queue();
 			m.addReaction(Driver.CHOICE_NO).queue();
 			//Can only set state once message is actually sent
-			UserInfo curr = Driver.users.get(user);
+			UserInfo curr = Driver.users.get(user.getIdLong());
 			curr.currentMessage = m.getIdLong();
 			curr.state = State.PROMO_FOUR_STATE;
 		});

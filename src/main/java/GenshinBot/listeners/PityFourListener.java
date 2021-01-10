@@ -31,10 +31,10 @@ public class PityFourListener extends ListenerAdapter {
 			return;
 		}
 		User user = e.getAuthor();
-		if(!Driver.users.containsKey(user)) {
+		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		
 		if(currUser.state == State.PITY_FOUR_STATE) {
 			this.handlePityFour(e);
@@ -44,7 +44,7 @@ public class PityFourListener extends ListenerAdapter {
 	private void handlePityFour(MessageReceivedEvent e) {
 		User user = e.getAuthor();
 		String command = e.getMessage().getContentDisplay();
-		UserInfo currUser = Driver.users.get(user);
+		UserInfo currUser = Driver.users.get(user.getIdLong());
 		
 		//User entered valid pity value
 		if(currUser.isValidPityFour(command)) {
@@ -67,14 +67,14 @@ public class PityFourListener extends ListenerAdapter {
 				embedBuilder.addField("Otherwise:", 
 						"React with :x:", 
 						false);
-				embedBuilder.setTitle(Driver.getEmbedTitle(currUser));
+				embedBuilder.setTitle(Driver.getEmbedTitle(user, currUser));
 				MessageEmbed message = embedBuilder.build();
 				e.getChannel().sendMessage(message).queue(m ->{
 					m.addReaction(Driver.CHOICE_YES).queue();
 					m.addReaction(Driver.CHOICE_NO).queue();
 					long messageID = m.getIdLong();
 					
-					UserInfo curr = Driver.users.get(user);
+					UserInfo curr = Driver.users.get(user.getIdLong());
 					curr.currentMessage = messageID;
 					curr.state = State.PROMO_FIVE_STATE;
 					
