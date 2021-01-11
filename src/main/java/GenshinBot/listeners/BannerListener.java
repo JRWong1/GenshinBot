@@ -24,6 +24,11 @@ public class BannerListener extends ListenerAdapter {
 		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
+		//Not in proper channel, ignore
+		if(!e.getChannel().getName().equals(Driver.CHANNEL)) {
+			System.out.println("ignoring channel");
+			return;
+		}
 		UserInfo currUser = Driver.users.get(user.getIdLong());
 		if(currUser.state == State.CHOOSE_BANNER_STATE) {
 			//Must be choose banner state and must react to the corresponding message
@@ -76,20 +81,18 @@ public class BannerListener extends ListenerAdapter {
 		embedBuilder.setColor(Color.BLUE);
 		MessageEmbed message = embedBuilder.build();
 		
-		
-		user.openPrivateChannel()
-			.flatMap(channel -> channel.sendMessage(message))
-			.queue(m -> {
-				m.addReaction(Driver.CHOICE_ONE).queue();
-				m.addReaction(Driver.CHOICE_TWO).queue();
-				m.addReaction(Driver.CHOICE_THREE).queue();
-				
-				//Set current state
-				long messageID = m.getIdLong();
-				
-				UserInfo currInfo = Driver.users.get(user.getIdLong());
-				currInfo.currentMessage = messageID;
-				currInfo.state = State.CHOOSE_BANNER_STATE;
-			});
+		e.getChannel().sendMessage(message).queue(m -> {
+			m.addReaction(Driver.CHOICE_ONE).queue();
+			m.addReaction(Driver.CHOICE_TWO).queue();
+			m.addReaction(Driver.CHOICE_THREE).queue();
+			
+			//Set current state
+			long messageID = m.getIdLong();
+			
+			UserInfo currInfo = Driver.users.get(user.getIdLong());
+			currInfo.currentMessage = messageID;
+			currInfo.state = State.CHOOSE_BANNER_STATE;
+		});
+
 	}
 }

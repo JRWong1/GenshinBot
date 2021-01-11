@@ -13,13 +13,18 @@ public class StartListener extends ListenerAdapter{
 			return;
 		}
 		User user = e.getAuthor();
+		
+		//Not in proper channel, ignore
+		if(!e.getChannel().getName().equals(Driver.CHANNEL)) {
+			return;
+		}
 
 		String command = e.getMessage().getContentDisplay();
 		if(command.equals("!start")) {
 			
 			if(Driver.users.containsKey(user.getIdLong())) {
 				e.getChannel().sendMessage(
-						"You have already begun the simulation, please check your Direct Messages."
+						user.getName() + ", you have already begun the simulation, please check your Direct Messages."
 						).queue();
 			}
 			else {
@@ -30,9 +35,8 @@ public class StartListener extends ListenerAdapter{
 				Driver.users.get(user.getIdLong()).lastInteraction = System.currentTimeMillis();
 				Driver.setTimeoutUser(user, Driver.users.get(user.getIdLong()));
 				
-				user.openPrivateChannel()
-					.flatMap(channel -> channel.sendMessage("Starting Genshin Simulation"))
-					.queue();
+				
+				e.getChannel().sendMessage("Starting " + user.getName() + "'s Genshin Simulation").queue();
 				
 				BannerListener.showBannerEmbed(e);
 				

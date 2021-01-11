@@ -21,6 +21,10 @@ public class PityFourListener extends ListenerAdapter {
 		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
+		//Not in proper channel, ignore
+		if(!e.getChannel().getName().equals(Driver.CHANNEL)) {
+			return;
+		}
 		UserInfo currUser = Driver.users.get(user.getIdLong());
 		
 		if(currUser.state == State.PITY_FOUR_STATE) {

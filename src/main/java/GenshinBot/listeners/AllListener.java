@@ -10,10 +10,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class AllListener extends ListenerAdapter{
 	@Override
     public void onMessageReceived(MessageReceivedEvent e) {
-		
+				
 		if(e.getAuthor().isBot()) {
 			return;
 		}
+		
 		User user = e.getAuthor();
 		UserInfo currUser = null;
 		if(Driver.users.containsKey(user.getIdLong())) {

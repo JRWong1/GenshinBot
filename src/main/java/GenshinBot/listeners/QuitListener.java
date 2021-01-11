@@ -14,13 +14,16 @@ public class QuitListener extends ListenerAdapter{
 		if(!Driver.users.containsKey(user.getIdLong())) {
 			return;
 		}
+		//Not in proper channel, ignore
+		if(!e.getChannel().getName().equals(Driver.CHANNEL)) {
+			return;
+		}
 		String command = e.getMessage().getContentDisplay();
 		if(command.equals("!quit")) {
 			if(Driver.users.containsKey(user.getIdLong())) {
 				Driver.users.remove(user.getIdLong());
 			}
-			user.openPrivateChannel()
-				.flatMap(channel -> channel.sendMessage("You may begin again with !start")).queue();
+			e.getChannel().sendMessage(user.getName() + ", you may begin again with !start").queue();
 		}
 	}
 }

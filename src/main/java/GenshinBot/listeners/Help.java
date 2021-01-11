@@ -20,7 +20,7 @@ public class Help extends ListenerAdapter {
         	User user = e.getAuthor();
         	eb.setTitle("Welcome to the Genshin Impact Wish Simulator, " + user.getName() + "!");
         	eb.setColor(Color.PINK);
-        	eb.appendDescription("The simulation will cover the current banners found in Genshin Impact, which are listed as the 'Event Banner', 'Weapon Banner', and 'Standard Banner'.");
+        	eb.appendDescription("Commands to use this bot may only be sent in a text channel named 'genshin-bot-commands' with the bot as a member. The simulation will cover the current banners found in Genshin Impact, which are listed as the 'Event Banner', 'Weapon Banner', and 'Standard Banner'.");
         	eb.addField("The commands to use this bot are listed below:", "!help - Displays list of commands and helpful information.", false);
         	eb.addField("", "!start - Starts the Genshin Impact Wish Simulation.", false);
         	eb.addField("", "!quit - Exits out of the Wish Simulation. Start it again with '!start'.", false);
